@@ -73,7 +73,7 @@ FairLend meaningfully integrates FairScale's reputation API as the **primary ris
 
 ---
 
-## 🚀 Quick Start
+##  Quick Start
 
 ### Prerequisites
 
@@ -143,7 +143,7 @@ Visit `http://localhost:3000` and connect your wallet!
 
 ---
 
-## 📁 Project Structure
+##  Project Structure
 
 ```
 fairlend-prototype/
@@ -242,7 +242,7 @@ pub struct Loan {
 
 ---
 
-## 🎨 Frontend Features
+##  Frontend Features
 
 ### Dashboard (`/`)
 - Wallet connection via Solana Wallet Adapter
@@ -286,7 +286,7 @@ pub struct Loan {
 
 ---
 
-## 🧪 Testing
+##  Testing
 
 ### Anchor Tests (Smart Contract)
 
@@ -296,13 +296,13 @@ anchor test
 ```
 
 **Test Coverage**:
-- ✅ Pool initialization
-- ✅ Lender deposits
-- ✅ Loan requests with various FairScores (>800, 400-800, <400)
-- ✅ Multiplier calculations
-- ✅ Interest rate assignments
-- ✅ Repayment with interest
-- ✅ Error cases (low score, insufficient funds)
+-  Pool initialization
+-  Lender deposits
+-  Loan requests with various FairScores (>800, 400-800, <400)
+-  Multiplier calculations
+-  Interest rate assignments
+-  Repayment with interest
+-  Error cases (low score, insufficient funds)
 
 ### Manual Testing Checklist
 
@@ -332,14 +332,14 @@ anchor test
 
 ---
 
-## 🔐 Security Considerations
+##  Security Considerations
 
 ### Current Implementation (Prototype)
-- ✅ FairScore validated on-chain (prevents tampering)
-- ✅ PDA-based escrow (no authority risks)
-- ✅ API key hidden from client (Next.js API routes)
-- ✅ Checked arithmetic (no overflows)
-- ⚠️ **Demo mode**: No real USDC transfers yet (requires token setup)
+-  FairScore validated on-chain (prevents tampering)
+-  PDA-based escrow (no authority risks)
+-  API key hidden from client (Next.js API routes)
+-  Checked arithmetic (no overflows)
+-  **Demo mode**: No real USDC transfers yet (requires token setup)
 
 ### Production Recommendations
 - 🔒 Implement oracle for real-time FairScore updates
@@ -426,7 +426,7 @@ anchor build
 
 ---
 
-## 👥 Contributing
+##  Contributing
 
 This is a prototype for the FairScale Challenge. For production use:
 1. Fork the repository
@@ -443,7 +443,7 @@ MIT License - feel free to use this as a template for your own reputation-based 
 
 ---
 
-## 🙏 Acknowledgments
+##  Acknowledgments
 
 - **FairScale** for the reputation API and challenge inspiration
 - **Solana Foundation** for the blazing-fast blockchain
@@ -452,15 +452,6 @@ MIT License - feel free to use this as a template for your own reputation-based 
 
 ---
 
-## 📞 Contact
-
-Built by [Your Name]
-- Twitter: [@yourhandle](#)
-- Discord: yourhandle#1234
-- Email: your.email@example.com
-
-**Submission Date**: January 2026
-**Challenge**: FairScale Developer Challenge
 
 ---
 
