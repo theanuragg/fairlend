@@ -22,10 +22,10 @@ export async function GET(request: NextRequest) {
 
     try {
         const response = await fetch(
-            `https://api.fairscale.xyz/fairscore/${wallet}`,
+            `https://api.fairscale.xyz/fairScore?wallet=${wallet}`,
             {
                 headers: {
-                    'Authorization': `Bearer ${apiKey}`,
+                    'apikey': apiKey,
                 },
             }
         );
