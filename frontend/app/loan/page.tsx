@@ -1,19 +1,25 @@
 'use client';
 
-import { useWallet, useConnection } from '@solana/wallet-adapter-react';
+import { useWallet } from '@solana/wallet-adapter-react';
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
-import { useState, useEffect } from 'react';
-import { PublicKey } from '@solana/web3.js';
-import { AnchorProvider, Program, Idl } from '@coral-xyz/anchor';
+import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
+import { useLendingData, ReserveData } from '@/hooks/useLendingData';
+import { useLendingOperations } from '@/hooks/useLendingOperations';
 
 export default function LoanPage() {
-    const { publicKey, signTransaction, signAllTransactions } = useWallet();
-    const { connection } = useConnection();
+    const { publicKey } = useWallet();
+    const { obligation, reserves, fetchObligation, loading: dataLoading } = useLendingData();
+    const { initObligation, depositObligationCollateral, borrowObligationLiquidity } = useLendingOperations();
+
     const [amount, setAmount] = useState('');
     const [fairscore, setFairscore] = useState<number | null>(null);
     const [loading, setLoading] = useState(false);
     const [txStatus, setTxStatus] = useState('');
+    const [collateralAmount, setCollateralAmount] = useState('');
+
+    // Select USDC reserve for borrowing/collateral
+    const activeReserve = useMemo(() => reserves[0], [reserves]); // Simplified
 
     useEffect(() => {
         if (publicKey) {
@@ -23,13 +29,10 @@ export default function LoanPage() {
 
     const fetchFairScore = async () => {
         if (!publicKey) return;
-
         try {
             const response = await fetch(`/api/getFairScore?wallet=${publicKey.toString()}`);
             const data = await response.json();
-            if (data.fairscore) {
-                setFairscore(data.fairscore);
-            }
+            if (data.fairscore) setFairscore(data.fairscore);
         } catch (error) {
             console.error('Error fetching FairScore:', error);
         }
@@ -41,150 +44,161 @@ export default function LoanPage() {
         return { name: 'Bronze', color: 'text-orange-600', multiplier: 0, apr: 0 };
     };
 
-    const handleRequestLoan = async () => {
-        if (!publicKey || !signTransaction || !signAllTransactions || !fairscore) {
-            alert('Please connect your wallet first');
-            return;
-        }
-
-        if (!amount || parseFloat(amount) <= 0) {
-            alert('Please enter a valid amount');
-            return;
-        }
-
-        if (fairscore < 400) {
-            alert('Your FairScore is too low. Minimum 400 required. Build your on-chain reputation!');
-            return;
-        }
-
+    const handleInitObligation = async () => {
+        if (!activeReserve) return;
         setLoading(true);
-        setTxStatus('Preparing transaction...');
-
+        setTxStatus('Initializing Loan Account...');
         try {
-            // TODO: Implement actual Anchor program interaction
-            // This is a placeholder for the demo
-            const tier = getTier(fairscore);
-            const adjustedAmount = parseFloat(amount) * tier.multiplier;
+            await initObligation(activeReserve.lendingMarket);
+            setTxStatus('Loan Account Initialized!');
+            await fetchObligation(); // Refresh to show next steps
+        } catch (e: any) {
+            console.error(e);
+            setTxStatus('Error: ' + e.message);
+        } finally {
+            setLoading(false);
+        }
+    };
 
-            setTxStatus(`Loan approved! You'll receive ${adjustedAmount} USDC at ${tier.apr}% APR`);
+    const handleDepositCollateral = async () => {
+        if (!activeReserve || !obligation) return;
+        setLoading(true);
+        setTxStatus('Depositing Collateral...');
+        try {
+            await depositObligationCollateral(activeReserve, parseFloat(collateralAmount), obligation.pubkey);
+            setTxStatus('Collateral Deposited!');
+            await fetchObligation();
+            setCollateralAmount('');
+        } catch (e: any) {
+            console.error(e);
+            setTxStatus('Error: ' + e.message);
+        } finally {
+            setLoading(false);
+        }
+    }
 
-            // Simulate transaction delay
-            await new Promise(resolve => setTimeout(resolve, 2000));
-
-            setTxStatus('Transaction successful! (Demo mode - connect to deployed program for real transactions)');
-
-        } catch (error: any) {
-            console.error('Error requesting loan:', error);
-            setTxStatus(`Error: ${error.message}`);
+    const handleBorrow = async () => {
+        if (!activeReserve || !obligation) return;
+        setLoading(true);
+        setTxStatus('Processing Loan...');
+        try {
+            const val = parseFloat(amount);
+            await borrowObligationLiquidity(activeReserve, val, obligation.pubkey);
+            setTxStatus(`Successfully borrowed ${val} USDC!`);
+            setAmount('');
+            await fetchObligation();
+        } catch (e: any) {
+            console.error(e);
+            setTxStatus('Error: ' + e.message);
         } finally {
             setLoading(false);
         }
     };
 
     const tier = fairscore ? getTier(fairscore) : null;
-    const adjustedAmount = amount && tier ? parseFloat(amount) * tier.multiplier : 0;
+    const adjustedAmount = amount && tier ? parseFloat(amount) * tier.multiplier : 0; // Legacy logic, might need adjustment for real math
 
     return (
-        <div className="min-h-screen flex flex-col">
-            {/* Header */}
-            <header className="border-b border-white/10 bg-black/20 backdrop-blur-sm">
-                <div className="container mx-auto px-6 py-4 flex justify-between items-center">
-                    <Link href="/">
-                        <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent cursor-pointer">
-                            FairLend
-                        </h1>
-                    </Link>
-                    <WalletMultiButton />
-                </div>
-            </header>
+        <div className="w-full animate-in fade-in duration-700">
+            <div className="max-w-3xl mx-auto">
+                <Link href="/" className="text-purple-400 hover:text-purple-300 mb-6 inline-block transition-colors">
+                    ← Back to Dashboard
+                </Link>
 
-            {/* Main Content */}
-            <main className="flex-1 container mx-auto px-6 py-12">
-                <div className="max-w-2xl mx-auto">
-                    <Link href="/" className="text-purple-400 hover:text-purple-300 mb-6 inline-block">
-                        ← Back to Dashboard
-                    </Link>
+                <h2 className="text-4xl font-bold text-white mb-8">Borrow Assets</h2>
 
-                    <h2 className="text-4xl font-bold text-white mb-8">Request Loan</h2>
+                {!publicKey ? (
+                    <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20 text-center">
+                        <p className="text-white text-lg mb-4">Connect wallet to borrow</p>
+                        <WalletMultiButton className="bg-indigo-600! hover:bg-indigo-700! rounded-xl!" />
+                    </div>
+                ) : (
+                    <div className="space-y-8">
+                        {/* FairScore Display */}
+                        {fairscore && tier && (
+                            <div className="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20 flex justify-between items-center">
+                                <div>
+                                    <div className="text-gray-300 text-sm">Your FairScore</div>
+                                    <div className={`text-3xl font-bold ${tier.color}`}>{fairscore}</div>
+                                </div>
+                                <div className="text-right">
+                                    <div className={`font-bold ${tier.color} text-xl`}>{tier.name} Tier</div>
+                                    <div className="text-gray-400 text-sm">{tier.apr}% APR Strategy</div>
+                                </div>
+                            </div>
+                        )}
 
-                    {!publicKey ? (
-                        <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20 text-center">
-                            <p className="text-white text-lg mb-4">
-                                Connect your wallet to request a loan
-                            </p>
-                            <WalletMultiButton />
-                        </div>
-                    ) : (
-                        <div className="space-y-6">
-                            {/* FairScore Summary */}
-                            {fairscore && tier && (
-                                <div className="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20">
-                                    <div className="flex justify-between items-center mb-4">
-                                        <span className="text-gray-300">Your FairScore:</span>
-                                        <span className={`text-3xl font-bold ${tier.color}`}>{fairscore}</span>
+                        {!obligation ? (
+                            <div className="bg-white/10 backdrop-blur-md rounded-xl p-8 border border-white/20 text-center">
+                                <h3 className="text-xl text-white font-bold mb-4">Start by creating a Loan Account</h3>
+                                <p className="text-gray-400 mb-6">You need an Obligation account to manage collateral and loans.</p>
+                                <button
+                                    onClick={handleInitObligation}
+                                    disabled={loading || !activeReserve}
+                                    className="px-8 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl transition-all shadow-lg"
+                                >
+                                    {loading ? 'Initializing...' : 'Initialize Loan Account'}
+                                </button>
+                                {txStatus && <p className="mt-4 text-gray-300">{txStatus}</p>}
+                            </div>
+                        ) : (
+                            <>
+                                {/* Collateral Section */}
+                                <div className="bg-white/10 backdrop-blur-md rounded-xl p-8 border border-white/20">
+                                    <h3 className="text-xl text-white font-bold mb-4">1. Add Collateral</h3>
+                                    <div className="flex space-x-4 mb-4">
+                                        <input
+                                            type="number"
+                                            value={collateralAmount}
+                                            onChange={(e) => setCollateralAmount(e.target.value)}
+                                            placeholder="Amount to deposit"
+                                            className="flex-1 bg-black/20 border border-white/10 rounded-xl px-4 text-white focus:outline-none focus:border-indigo-500"
+                                        />
+                                        <button
+                                            onClick={handleDepositCollateral}
+                                            disabled={loading}
+                                            className="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-xl whitespace-nowrap"
+                                        >
+                                            Deposit Collateral
+                                        </button>
                                     </div>
-                                    <div className="flex justify-between items-center mb-2">
-                                        <span className="text-gray-300">Tier:</span>
-                                        <span className={`font-bold ${tier.color}`}>{tier.name}</span>
-                                    </div>
-                                    <div className="flex justify-between items-center">
-                                        <span className="text-gray-300">Terms:</span>
-                                        <span className="text-white">{tier.multiplier}x amount @ {tier.apr}% APR</span>
+                                    <div className="text-sm text-gray-400">
+                                        Current Deposited Value: {obligation.depositedValue?.toString() || '0'} (wads)
                                     </div>
                                 </div>
-                            )}
 
-                            {/* Loan Form */}
-                            <div className="bg-white/10 backdrop-blur-md rounded-xl p-8 border border-white/20">
-                                <label className="block text-white font-semibold mb-2">
-                                    Loan Amount (USDC)
-                                </label>
-                                <input
-                                    type="number"
-                                    value={amount}
-                                    onChange={(e) => setAmount(e.target.value)}
-                                    placeholder="Enter amount"
-                                    className="w-full bg-white/5 border border-white/20 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-400"
-                                />
-
-                                {amount && tier && adjustedAmount > 0 && (
-                                    <div className="mt-4 p-4 bg-purple-500/20 rounded-lg border border-purple-400/30">
-                                        <div className="text-white text-sm space-y-1">
-                                            <div>Requested: <span className="font-semibold">{amount} USDC</span></div>
-                                            <div>You'll receive: <span className="font-semibold text-purple-300">{adjustedAmount} USDC</span></div>
-                                            <div>Interest Rate: <span className="font-semibold">{tier.apr}% APR</span></div>
-                                        </div>
+                                {/* Borrow Section */}
+                                <div className="bg-white/10 backdrop-blur-md rounded-xl p-8 border border-white/20">
+                                    <h3 className="text-xl text-white font-bold mb-4">2. Borrow Cash</h3>
+                                    <div className="mb-4">
+                                        <label className="text-gray-300 text-sm block mb-2">Loan Amount</label>
+                                        <input
+                                            type="number"
+                                            value={amount}
+                                            onChange={(e) => setAmount(e.target.value)}
+                                            className="w-full bg-black/20 border border-white/10 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-indigo-500"
+                                        />
                                     </div>
-                                )}
-
-                                <button
-                                    onClick={handleRequestLoan}
-                                    disabled={loading || !amount || !fairscore}
-                                    className="w-full mt-6 bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 disabled:from-gray-500 disabled:to-gray-600 text-white font-bold py-4 rounded-lg transition-all disabled:cursor-not-allowed"
-                                >
-                                    {loading ? 'Processing...' : 'Request Loan'}
-                                </button>
+                                    <button
+                                        onClick={handleBorrow}
+                                        disabled={loading}
+                                        className="w-full py-4 bg-linear-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 text-white font-bold rounded-xl transition-all shadow-lg"
+                                    >
+                                        {loading ? 'Processing...' : 'Request Loan'}
+                                    </button>
+                                </div>
 
                                 {txStatus && (
-                                    <div className="mt-4 p-4 bg-blue-500/20 rounded-lg border border-blue-400/30">
-                                        <p className="text-blue-200 text-sm">{txStatus}</p>
+                                    <div className={`p-4 rounded-lg border ${txStatus.includes('Error') ? 'bg-red-500/20 border-red-400/30 text-red-200' : 'bg-green-500/20 border-green-400/30 text-green-200'
+                                        }`}>
+                                        <p>{txStatus}</p>
                                     </div>
                                 )}
-                            </div>
-
-                            {/* Info */}
-                            <div className="bg-white/5 rounded-xl p-6 border border-white/10">
-                                <h4 className="text-white font-bold mb-2">How FairScore affects your loan:</h4>
-                                <ul className="text-purple-200 text-sm space-y-1">
-                                    <li>• Score 800+: Borrow 2x your request at 5% APR</li>
-                                    <li>• Score 400-800: Borrow 1.5x your request at 10% APR</li>
-                                    <li>• Score &lt;400: Loan denied - improve your on-chain activity</li>
-                                </ul>
-                            </div>
-                        </div>
-                    )}
-                </div>
-            </main>
+                            </>
+                        )}
+                    </div>
+                )}
+            </div>
         </div>
     );
 }
