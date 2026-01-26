@@ -69,7 +69,7 @@ export const MarketOverview: FC = () => {
         // 2. Open Twitter with text
         setTimeout(() => {
             const text = `I just checked my FairScore on FairLend! My score is ${score.score} and I'm a ${score.tier} Tier user. Verify your on-chain reputation now!`;
-            const url = 'https://fairscale.xyz';
+            const url = 'https://fairlend-nine.vercel.app/';
             const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
             window.open(twitterUrl, '_blank');
 
