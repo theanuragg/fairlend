@@ -164,7 +164,7 @@ export const useLendingData = () => {
 
         // JS Filter approach for safety
         try {
-            const allObligations = await program.account.obligation.all();
+            const allObligations = await (program as any).account.obligation.all();
             const myObligation = allObligations.find((o: any) =>
                 o.account.owner.toBase58() === publicKey.toBase58()
             );
@@ -196,12 +196,17 @@ export const useLendingData = () => {
     }, [fetchReserves]);
 
     useEffect(() => {
+        fetchReserves();
+    }, [fetchReserves]);
+
+    useEffect(() => {
         if (publicKey) {
             fetchObligation();
         } else {
             setObligation(null);
         }
-    }, [fetchObligation, publicKey]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [fetchObligation, publicKey?.toBase58()]);
 
     return {
         reserves,
