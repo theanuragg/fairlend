@@ -25,7 +25,8 @@ export default function LoanPage() {
         if (publicKey) {
             fetchFairScore();
         }
-    }, [publicKey]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [publicKey?.toBase58()]);
 
     const fetchFairScore = async () => {
         if (!publicKey) return;
