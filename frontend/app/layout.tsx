@@ -1,22 +1,25 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Outfit, Inter } from "next/font/google"; // Premium fonts
 import "./globals.css";
+import "@solana/wallet-adapter-react-ui/styles.css";
 import { WalletContextProvider } from "@/components/WalletContextProvider";
 import { NavBar } from "@/components/NavBar";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+import BackgroundLayer from "@/components/BackgroundLayer";
+
+const outfit = Outfit({
   subsets: ["latin"],
+  variable: "--font-heading",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const inter = Inter({
   subsets: ["latin"],
+  variable: "--font-sans",
 });
 
 export const metadata: Metadata = {
-  title: "FairLend - Reputation-Gated P2P Lending",
-  description: "Undercollateralized lending on Solana powered by FairScale reputation scores",
+  title: "FairLend - Premium P2P Lending",
+  description: "Next-gen undercollateralized lending on Solana.",
 };
 
 export default function RootLayout({
@@ -27,10 +30,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gradient-to-br from-purple-900 via-indigo-900 to-blue-900 min-h-screen`}
+        className={`${outfit.variable} ${inter.variable} font-sans antialiased min-h-screen bg-[#030712] text-white selection:bg-purple-500/30`}
       >
+        <BackgroundLayer />
         <WalletContextProvider>
-          <div className="flex flex-col min-h-screen">
+          <div className="flex flex-col min-h-screen relative z-10">
             <NavBar />
             <main className="flex-grow pt-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
               {children}
