@@ -2,7 +2,7 @@
 
 import { useAnchorWallet, useConnection } from "@solana/wallet-adapter-react";
 import { AnchorProvider, Program, Idl, setProvider } from "@coral-xyz/anchor";
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
 import idl from "../idl/lending_anchor.json";
 
 const PROGRAM_ID = idl.address;
@@ -17,11 +17,16 @@ export const useLendingProgram = () => {
         const provider = new AnchorProvider(connection, wallet, {
             preflightCommitment: "processed",
         });
-        setProvider(provider);
 
         // Cast idl to unknown then Idl to avoid type instantiation issues if JSON is strict
         return new Program(idl as unknown as Idl, provider);
     }, [connection, wallet]);
+
+    useEffect(() => {
+        if (program) {
+            setProvider(program.provider as any);
+        }
+    }, [program]);
 
     return { program, programId: PROGRAM_ID };
 };
