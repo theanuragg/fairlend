@@ -1,0 +1,1338 @@
+{
+  "address": "5svw6ndVHyYaUASP5njKKCMM8GiaXGTJZiycw7TGY5Y2",
+  "metadata": {
+    "name": "lending_anchor",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "Created with Anchor"
+  },
+  "instructions": [
+    {
+      "name": "borrow_obligation_liquidity",
+      "discriminator": [
+        121,
+        127,
+        18,
+        204,
+        73,
+        245,
+        225,
+        65
+      ],
+      "accounts": [
+        {
+          "name": "source_liquidity"
+        },
+        {
+          "name": "destination_liuqidity"
+        },
+        {
+          "name": "borrow_reserve"
+        },
+        {
+          "name": "borrow_reserve_liquidity_fee_receiver"
+        },
+        {
+          "name": "obligation"
+        },
+        {
+          "name": "lending_market"
+        },
+        {
+          "name": "lending_market_authority",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "lending_market"
+              }
+            ]
+          }
+        },
+        {
+          "name": "obligation_owner",
+          "signer": true
+        },
+        {
+          "name": "host_fee_receiver"
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "args": [
+        {
+          "name": "liquidity_amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "deposit_obligation_collateral",
+      "discriminator": [
+        108,
+        209,
+        4,
+        72,
+        21,
+        22,
+        118,
+        133
+      ],
+      "accounts": [
+        {
+          "name": "source_collateral"
+        },
+        {
+          "name": "destination_collateral"
+        },
+        {
+          "name": "deposit_reserve"
+        },
+        {
+          "name": "obligation"
+        },
+        {
+          "name": "lending_market"
+        },
+        {
+          "name": "obligation_owner",
+          "signer": true
+        },
+        {
+          "name": "user_transfer_authority"
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "args": [
+        {
+          "name": "collateral_amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "deposit_reserve_liquidity",
+      "discriminator": [
+        169,
+        201,
+        30,
+        126,
+        6,
+        205,
+        102,
+        68
+      ],
+      "accounts": [
+        {
+          "name": "source_liquidity"
+        },
+        {
+          "name": "destination_collateral"
+        },
+        {
+          "name": "reserve"
+        },
+        {
+          "name": "reserve_liquidity_supply"
+        },
+        {
+          "name": "reserve_collateral_mint"
+        },
+        {
+          "name": "lending_market"
+        },
+        {
+          "name": "lending_market_authority",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "lending_market"
+              }
+            ]
+          }
+        },
+        {
+          "name": "user_transfer_authority"
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "args": [
+        {
+          "name": "liquidity_amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "init_lending_market",
+      "discriminator": [
+        34,
+        162,
+        116,
+        14,
+        101,
+        137,
+        94,
+        239
+      ],
+      "accounts": [
+        {
+          "name": "owner",
+          "docs": [
+            "Signer of this instruction",
+            "will be the owner field of lending_market"
+          ],
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "lending_market",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "name": "oracle"
+        }
+      ],
+      "args": [
+        {
+          "name": "quote_currency",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "init_obligation",
+      "discriminator": [
+        251,
+        10,
+        231,
+        76,
+        27,
+        11,
+        159,
+        96
+      ],
+      "accounts": [
+        {
+          "name": "obligation"
+        },
+        {
+          "name": "lending_market"
+        },
+        {
+          "name": "obligation_owner",
+          "signer": true
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "init_reserve",
+      "discriminator": [
+        138,
+        245,
+        71,
+        225,
+        153,
+        4,
+        3,
+        43
+      ],
+      "accounts": [
+        {
+          "name": "source_liquidity",
+          "docs": [
+            "Source liquidity token account",
+            "$authority can transfer $liquidity_amount."
+          ],
+          "writable": true
+        },
+        {
+          "name": "reserve_liquidity_mint",
+          "docs": [
+            "Reserve liquidity SPL Token mint"
+          ]
+        },
+        {
+          "name": "reserve_collateral_mint",
+          "docs": [
+            "Reserve collateral SPL Token mint"
+          ],
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "destination_collateral",
+          "docs": [
+            "Destination collateral token account",
+            "user's collateral token account"
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "user_transfer_authority"
+              },
+              {
+                "kind": "const",
+                "value": [
+                  6,
+                  221,
+                  246,
+                  225,
+                  215,
+                  101,
+                  161,
+                  147,
+                  217,
+                  203,
+                  225,
+                  70,
+                  206,
+                  235,
+                  121,
+                  172,
+                  28,
+                  180,
+                  133,
+                  237,
+                  95,
+                  91,
+                  55,
+                  145,
+                  58,
+                  140,
+                  245,
+                  133,
+                  126,
+                  255,
+                  0,
+                  169
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "reserve_collateral_mint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140,
+                151,
+                37,
+                143,
+                78,
+                36,
+                137,
+                241,
+                187,
+                61,
+                16,
+                41,
+                20,
+                142,
+                13,
+                131,
+                11,
+                90,
+                19,
+                153,
+                218,
+                255,
+                16,
+                132,
+                4,
+                142,
+                123,
+                216,
+                219,
+                233,
+                248,
+                89
+              ]
+            }
+          }
+        },
+        {
+          "name": "reserve",
+          "docs": [
+            "Reserve account"
+          ],
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "reserve_liquidity_supply",
+          "docs": [
+            "Reserve liquidity supply SPL Token account"
+          ],
+          "writable": true
+        },
+        {
+          "name": "reserve_liquidity_fee_receiver",
+          "docs": [
+            "Reserve liquidity fee receiver"
+          ],
+          "writable": true
+        },
+        {
+          "name": "reserve_collateral_supply",
+          "docs": [
+            "Reserve collateral token supply"
+          ],
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "pyth_product"
+        },
+        {
+          "name": "pyth_price",
+          "docs": [
+            "This will be used as the reserve liquidity oracle account"
+          ]
+        },
+        {
+          "name": "lending_market",
+          "docs": [
+            "Lending market account"
+          ]
+        },
+        {
+          "name": "lending_market_authority",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "lending_market"
+              }
+            ]
+          }
+        },
+        {
+          "name": "lending_market_owner",
+          "docs": [
+            "Lending market owner"
+          ],
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "user_transfer_authority",
+          "docs": [
+            "User transfer authority ($authority)"
+          ],
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "docs": [
+            "system program"
+          ],
+          "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "token_program",
+          "docs": [
+            "token program"
+          ],
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "name": "associated_token_program",
+          "docs": [
+            "associated token program"
+          ],
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+        },
+        {
+          "name": "rent",
+          "docs": [
+            "rent sysvar"
+          ],
+          "address": "SysvarRent111111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "liquidity_amount",
+          "type": "u64"
+        },
+        {
+          "name": "reserve_config",
+          "type": {
+            "defined": {
+              "name": "ReserveConfig"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "redeem_reserve_collateral",
+      "discriminator": [
+        234,
+        117,
+        181,
+        125,
+        185,
+        142,
+        220,
+        29
+      ],
+      "accounts": [
+        {
+          "name": "source_collateral"
+        },
+        {
+          "name": "destination_liquidity"
+        },
+        {
+          "name": "reserve"
+        },
+        {
+          "name": "reserve_collateral_mint"
+        },
+        {
+          "name": "reserve_liquidity_supply"
+        },
+        {
+          "name": "lending_market"
+        },
+        {
+          "name": "lending_market_authority",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "lending_market"
+              }
+            ]
+          }
+        },
+        {
+          "name": "user_transfer_authority"
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "args": [
+        {
+          "name": "collateral_amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "repay_obligation_liquidity",
+      "discriminator": [
+        145,
+        178,
+        13,
+        225,
+        76,
+        240,
+        147,
+        72
+      ],
+      "accounts": [
+        {
+          "name": "source_liquidity"
+        },
+        {
+          "name": "destination_liquidity"
+        },
+        {
+          "name": "repay_reserve"
+        },
+        {
+          "name": "obligation"
+        },
+        {
+          "name": "lending_market"
+        },
+        {
+          "name": "user_transfer_authority"
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "args": [
+        {
+          "name": "liquidity_amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "set_lending_market_owner",
+      "discriminator": [
+        195,
+        167,
+        10,
+        253,
+        167,
+        211,
+        14,
+        143
+      ],
+      "accounts": [
+        {
+          "name": "lending_market",
+          "writable": true
+        },
+        {
+          "name": "owner",
+          "signer": true,
+          "relations": [
+            "lending_market"
+          ]
+        }
+      ],
+      "args": [
+        {
+          "name": "new_owner",
+          "type": "pubkey"
+        }
+      ]
+    },
+    {
+      "name": "withdraw_obligation_collateral",
+      "discriminator": [
+        37,
+        116,
+        205,
+        103,
+        243,
+        192,
+        92,
+        198
+      ],
+      "accounts": [
+        {
+          "name": "source_collateral"
+        },
+        {
+          "name": "destination_collateral"
+        },
+        {
+          "name": "withdraw_reserve"
+        },
+        {
+          "name": "obligation"
+        },
+        {
+          "name": "lending_market"
+        },
+        {
+          "name": "lending_market_authority",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "lending_market"
+              }
+            ]
+          }
+        },
+        {
+          "name": "obligation_owner",
+          "signer": true
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "args": [
+        {
+          "name": "collateral_amount",
+          "type": "u64"
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "LendingMarket",
+      "discriminator": [
+        246,
+        114,
+        50,
+        98,
+        72,
+        157,
+        28,
+        120
+      ]
+    },
+    {
+      "name": "Obligation",
+      "discriminator": [
+        168,
+        206,
+        141,
+        106,
+        88,
+        76,
+        172,
+        167
+      ]
+    },
+    {
+      "name": "Reserve",
+      "discriminator": [
+        43,
+        242,
+        204,
+        202,
+        26,
+        247,
+        59,
+        127
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "InstructionUnpackError",
+      "msg": "Instruction Unpack Error"
+    },
+    {
+      "code": 6001,
+      "name": "InvalidMarketOwner",
+      "msg": "Market owner is invalid"
+    },
+    {
+      "code": 6002,
+      "name": "InvalidAmount",
+      "msg": "Input amount is invalid"
+    },
+    {
+      "code": 6003,
+      "name": "InvalidConfig",
+      "msg": "Input config value is invalid"
+    },
+    {
+      "code": 6004,
+      "name": "ReserveNotInitializedWithLiquidity",
+      "msg": "Reserve must be initialized with liquidity"
+    },
+    {
+      "code": 6005,
+      "name": "InvalidAccountInput",
+      "msg": "Invalid account input"
+    },
+    {
+      "code": 6006,
+      "name": "InvalidOracleConfig",
+      "msg": "Input oracle config is invalid"
+    },
+    {
+      "code": 6007,
+      "name": "MathOverflow",
+      "msg": "Math operation overflow"
+    },
+    {
+      "code": 6008,
+      "name": "PubkeyError",
+      "msg": "Pubkey error"
+    },
+    {
+      "code": 6009,
+      "name": "InvalidMarketAuthority",
+      "msg": "Market authority is invalid"
+    },
+    {
+      "code": 6010,
+      "name": "InsufficientLiquidity",
+      "msg": "Insufficient liquidity available"
+    },
+    {
+      "code": 6011,
+      "name": "ReserveStale",
+      "msg": "Stale Reserve"
+    },
+    {
+      "code": 6012,
+      "name": "InvalidTokenProgram",
+      "msg": "Invalid Token Program ID"
+    },
+    {
+      "code": 6013,
+      "name": "ObligationReserveLimit",
+      "msg": "Obligation Reserve accounts exceeds the limit"
+    },
+    {
+      "code": 6014,
+      "name": "ObligationStale",
+      "msg": "Stale Obligation"
+    },
+    {
+      "code": 6015,
+      "name": "ObligatinoDepositsEmpty",
+      "msg": "Obligation deposits is empty"
+    },
+    {
+      "code": 6016,
+      "name": "ObligationDepositsZero",
+      "msg": "Obligation deposit amount is zero"
+    },
+    {
+      "code": 6017,
+      "name": "ObligationCollateralEmpty",
+      "msg": "Deposited Obligation Collateral is empty"
+    },
+    {
+      "code": 6018,
+      "name": "InvalidObligationCollateral",
+      "msg": "Obligation collatateral is invalid"
+    },
+    {
+      "code": 6019,
+      "name": "WithdrawTooLarge",
+      "msg": "Withdraw amount is too large"
+    },
+    {
+      "code": 6020,
+      "name": "WithdrawTooSmall",
+      "msg": "Withdraw amount is too small"
+    },
+    {
+      "code": 6021,
+      "name": "InvalidAccountOwner",
+      "msg": "Account owner is invalid"
+    },
+    {
+      "code": 6022,
+      "name": "InvalidObligationOwner",
+      "msg": "Obligation owner is invalid"
+    },
+    {
+      "code": 6023,
+      "name": "BorrowTooLarge",
+      "msg": "Borrow value is too large"
+    },
+    {
+      "code": 6024,
+      "name": "BorrowTooSmall",
+      "msg": "Borrow value is too small"
+    },
+    {
+      "code": 6025,
+      "name": "ObligationBorrowsEmpty",
+      "msg": "Obligation borrows is empty"
+    },
+    {
+      "code": 6026,
+      "name": "InvalidObligationLiquidity",
+      "msg": "Obligation liquidity is invalid"
+    },
+    {
+      "code": 6027,
+      "name": "ObligationLiquidityEmpty",
+      "msg": "Obligation liquidity is empty"
+    },
+    {
+      "code": 6028,
+      "name": "RepayTooSmall",
+      "msg": "Repay amount is too small"
+    }
+  ],
+  "types": [
+    {
+      "name": "LastUpdate",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "slot",
+            "docs": [
+              "Last slot when updated"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "stale",
+            "docs": [
+              "True when marked stale, false when slot updated"
+            ],
+            "type": "bool"
+          }
+        ]
+      }
+    },
+    {
+      "name": "LendingMarket",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "version",
+            "docs": [
+              "Version of lending market"
+            ],
+            "type": "u8"
+          },
+          {
+            "name": "bump_seed",
+            "docs": [
+              "Bump seed for derived authority address"
+            ],
+            "type": "u8"
+          },
+          {
+            "name": "owner",
+            "docs": [
+              "Owner authority which can add new reserves"
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "quote_currency",
+            "docs": [
+              "Currency market prices are quoted in"
+            ],
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "token_program_id",
+            "type": "pubkey"
+          },
+          {
+            "name": "oracle_program_id",
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Obligation",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "version",
+            "type": "u8"
+          },
+          {
+            "name": "last_update",
+            "type": {
+              "defined": {
+                "name": "LastUpdate"
+              }
+            }
+          },
+          {
+            "name": "lending_market",
+            "type": "pubkey"
+          },
+          {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "deposits",
+            "type": {
+              "vec": {
+                "defined": {
+                  "name": "ObligationCollateral"
+                }
+              }
+            }
+          },
+          {
+            "name": "borrows",
+            "type": {
+              "vec": {
+                "defined": {
+                  "name": "ObligationLiquidity"
+                }
+              }
+            }
+          },
+          {
+            "name": "deposited_value",
+            "type": "u128"
+          },
+          {
+            "name": "borrowed_value",
+            "type": "u128"
+          },
+          {
+            "name": "allowed_borrow_value",
+            "type": "u128"
+          },
+          {
+            "name": "unhealthy_borrow_value",
+            "type": "u128"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ObligationCollateral",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "deposit_reserve",
+            "type": "pubkey"
+          },
+          {
+            "name": "deposited_amount",
+            "type": "u64"
+          },
+          {
+            "name": "market_value",
+            "docs": [
+              "Collaterla market value in quote qurrency"
+            ],
+            "type": "u128"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ObligationLiquidity",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "borrow_reserve",
+            "type": "pubkey"
+          },
+          {
+            "name": "cumulative_borrow_rate_wads",
+            "type": "u128"
+          },
+          {
+            "name": "borrowed_amount_wads",
+            "type": "u128"
+          },
+          {
+            "name": "market_value",
+            "type": "u128"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Reserve",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "version",
+            "type": "u8"
+          },
+          {
+            "name": "last_update",
+            "type": {
+              "defined": {
+                "name": "LastUpdate"
+              }
+            }
+          },
+          {
+            "name": "lending_market",
+            "docs": [
+              "Lending market address"
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "liquidity",
+            "docs": [
+              "Reserve liquidity"
+            ],
+            "type": {
+              "defined": {
+                "name": "ReserveLiquidity"
+              }
+            }
+          },
+          {
+            "name": "collateral",
+            "docs": [
+              "Reserve collateral"
+            ],
+            "type": {
+              "defined": {
+                "name": "ReserveCollateral"
+              }
+            }
+          },
+          {
+            "name": "config",
+            "docs": [
+              "Reserve configuration values"
+            ],
+            "type": {
+              "defined": {
+                "name": "ReserveConfig"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "ReserveCollateral",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "mint_pubkey",
+            "docs": [
+              "Reserve collateral mint address"
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "mint_total_supply",
+            "docs": [
+              "Reserve collateral mint supply, used for exchange rate"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "supply_pubkey",
+            "docs": [
+              "Reserve collateral supply address"
+            ],
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ReserveConfig",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "optimal_utilization_rate",
+            "docs": [
+              "Optimal utilization rate, as a percentage"
+            ],
+            "type": "u8"
+          },
+          {
+            "name": "loan_to_value_ratio",
+            "docs": [
+              "Target ratio of the value of borrows to deposits, as a percentage",
+              "0 if uses as collateral is disabled"
+            ],
+            "type": "u8"
+          },
+          {
+            "name": "liquidation_bonus",
+            "docs": [
+              "Bonus a liquidator gets when repaying part of an unhealthy obligation, as a percentage"
+            ],
+            "type": "u8"
+          },
+          {
+            "name": "liquidation_threshold",
+            "docs": [
+              "Loan to value ratio at which an obligation can be liquidated, as a percentage"
+            ],
+            "type": "u8"
+          },
+          {
+            "name": "min_borrow_rate",
+            "docs": [
+              "Min borrow APY"
+            ],
+            "type": "u8"
+          },
+          {
+            "name": "optimal_borrow_rate",
+            "docs": [
+              "Optimal (uitilization) borrow APY"
+            ],
+            "type": "u8"
+          },
+          {
+            "name": "max_borrow_rate",
+            "docs": [
+              "Max borrow APY"
+            ],
+            "type": "u8"
+          },
+          {
+            "name": "fees",
+            "docs": [
+              "Program owner fees assessed, separate from gains due to interest accrual"
+            ],
+            "type": {
+              "defined": {
+                "name": "ReserveFees"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "ReserveFees",
+      "docs": [
+        "Additional fee information on a reserve"
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "borrow_fee_wad",
+            "type": "u64"
+          },
+          {
+            "name": "flash_loan_fee_wad",
+            "type": "u64"
+          },
+          {
+            "name": "host_fee_percentage",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ReserveLiquidity",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "mint_pubkey",
+            "docs": [
+              "Reserve liquidity mint address"
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "mint_decimals",
+            "docs": [
+              "Reserve liquidity mint decimals"
+            ],
+            "type": "u8"
+          },
+          {
+            "name": "supply_pubkey",
+            "docs": [
+              "Reserve liquidity supply address"
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "fee_receiver",
+            "docs": [
+              "Reserve liquidity fee receiver address"
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "oracle_pubkey",
+            "docs": [
+              "Reserve liquidity oracle account"
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "available_amount",
+            "docs": [
+              "Reserve liquidity available"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "borrowed_amount_wads",
+            "docs": [
+              "Reserve liquidity borrowed"
+            ],
+            "type": "u128"
+          },
+          {
+            "name": "cumulative_borrow_rate_wads",
+            "docs": [
+              "Reserve liquidity cumulative borrow rate"
+            ],
+            "type": "u128"
+          },
+          {
+            "name": "market_price",
+            "docs": [
+              "Reserve liquidity market price in quote currency"
+            ],
+            "type": "u128"
+          }
+        ]
+      }
+    }
+  ],
+  "constants": [
+    {
+      "name": "INITIAL_COLLATERAL_RATE",
+      "type": "u64",
+      "value": "1000000000000000000"
+    },
+    {
+      "name": "INITIAL_COLLATERAL_RATIO",
+      "docs": [
+        "collateral と liquidityの比率",
+        "もし5ならば，colalteralはliquidityの5倍価値が薄いということ"
+      ],
+      "type": "u64",
+      "value": "1"
+    },
+    {
+      "name": "MAX_OBLIGATION_RESERVE",
+      "type": "u64",
+      "value": "10"
+    },
+    {
+      "name": "PROGRAM_VERSION",
+      "type": "u8",
+      "value": "1"
+    }
+  ]
+}
