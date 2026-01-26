@@ -5,10 +5,10 @@ resolution = true
 skip-lint = false
 
 [programs.devnet]
-fairlend = "5A3q18mkFPkm4LCcgj6YRHp7CkE8v4aCqvQzzFH67rV8"
+fairlend = "4r9nXSkxRYEP8xytiLHuhJDXKCYKXsADPa94dBfPB6Ac"
 
 [programs.localnet]
-fairlend = "5A3q18mkFPkm4LCcgj6YRHp7CkE8v4aCqvQzzFH67rV8"
+fairlend = "4r9nXSkxRYEP8xytiLHuhJDXKCYKXsADPa94dBfPB6Ac"
 
 [registry]
 url = "https://api.apr.dev"

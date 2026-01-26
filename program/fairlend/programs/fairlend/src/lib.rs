@@ -17,7 +17,7 @@ use crate::{
 };
 use anchor_lang::prelude::*;
 
-declare_id!("5svw6ndVHyYaUASP5njKKCMM8GiaXGTJZiycw7TGY5Y2");
+declare_id!("4r9nXSkxRYEP8xytiLHuhJDXKCYKXsADPa94dBfPB6Ac");
 
 #[program]
 pub mod lending_anchor {
