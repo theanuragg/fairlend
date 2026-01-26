@@ -10,8 +10,7 @@ import {
 import { clusterApiUrl } from '@solana/web3.js';
 import { useMemo } from 'react';
 
-// Default styles for wallet adapter
-require('@solana/wallet-adapter-react-ui/styles.css');
+// Default styles for wallet adapter and modal UI components
 
 export function WalletContextProvider({
     children,
