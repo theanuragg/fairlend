@@ -14,15 +14,17 @@ cpi = ["no-entrypoint"]
 no-entrypoint = []
 no-idl = []
 no-log-ix-name = []
-idl-build = ["anchor-lang/idl-build"]
+idl-build = ["anchor-lang/idl-build", "anchor-spl/idl-build"]
 anchor-debug = []
 custom-heap = []
 custom-panic = []
+anchor-test = []
 
 
 [dependencies]
-anchor-lang = "0.32.1"
+anchor-lang = "0.30.1"
 anchor-spl = "0.30.1"
+pyth-sdk-solana = "=0.10.1"
 
 
 [lints.rust]
